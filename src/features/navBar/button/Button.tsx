@@ -20,7 +20,6 @@ const Button: React.FC<ButtonProps> = (props) => {
         };
       }}
       to={route}
-      // key={invoice.number}
     >
       <div className="flex gap-1 items-center">
         {icon}

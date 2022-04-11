@@ -5,16 +5,7 @@ import { Weather } from './autoCompleteResponse'
 export const weatherApi = createApi({
     reducerPath: 'weatherApi',
     baseQuery: fetchBaseQuery({
-        baseUrl: 'http://dataservice.accuweather.com/locations/v1/',
-        // prepareHeaders: (headers, { getState }) => {
-        //     // By default, if we have a token in the store, let's use that for authenticated requests
-        //     const token = (getState() as RootState).auth.token
-        //     if (token) {
-        //         headers.set('authorization', `Bearer ${token}`)
-        //     }
-        //     return headers
-        // },
-
+        baseUrl: 'http://dataservice.accuweather.com/',
     }),
     endpoints: (builder) => ({
         autoComplete: builder.query<Weather.AutoComplete.Response, {
@@ -22,14 +13,24 @@ export const weatherApi = createApi({
             q: string,
             language?: string,
         }>({
-            query: () => `cities/autocomplete`,
+            //@ts-ignore
+            query: (props) => `locations/v1/cities/autocomplete?${Object.keys(props).map(key => props[key] ? `${key}=${props[key]}` : "").join('&')}`,
 
         }),
-        getCurrentWeather: builder.query<Weather.CurrentWeather.Return, string>({
-            query: (cityKey) => cityKey,
+        getCurrentWeather: builder.query<Weather.CurrentWeather.Return, {
+            cityKey: string,
+            apikey: string,
+        }>({
+            query: (props) => `currentconditions/v1/${props.cityKey}?apikey=${props.apikey}`,
         }),
-        get5Days: builder.query<Weather.FiveDays.Return, string>({
-            query: (cityKey) => `daily/5day/${cityKey}`,
+        get5Days: builder.query<Weather.FiveDays.Return, {
+            cityKey: string,
+            apikey: string,
+        }>({
+            query: ({ apikey, cityKey }) => `forecasts/v1/daily/5day/${cityKey}?apikey=${apikey}`,
+        }),
+        getCityByGeoLocation: builder.query<Weather.CityByGeoLocation.Response, Weather.CityByGeoLocation.Request>({
+            query: ({ apikey }) => `locations/v1/cities/geoposition/search?apikey=${apikey}`,
         }),
     }),
 })

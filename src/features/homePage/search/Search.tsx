@@ -1,11 +1,25 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import AsyncSelect from "react-select/async";
+import { useAppDispatch } from "../../../app/hooks";
 import { useLazyAutoCompleteQuery } from "../../../service/weatherService";
+import { setSelectedCityKey, setSelectedCityTitle } from "../homeSlice";
 
 const Search = () => {
-  const [value, setValue] = useState("");
-  const [search, { isLoading, isFetching, isError }] =
+  const dispatch = useAppDispatch();
+  const [search, { data, isLoading, isFetching, isError }] =
     useLazyAutoCompleteQuery();
+
+  useEffect(() => {
+    const loadDefaultValues = async () => {
+      const key = process.env.REACT_APP_WEATHER_KEY;
+      if (!key) return;
+      search({
+        q: "",
+        apikey: key,
+      }).unwrap();
+    };
+    loadDefaultValues();
+  }, [search]);
 
   const loadOptions = async (
     inputValue: string,
@@ -13,27 +27,39 @@ const Search = () => {
   ) => {
     const key = process.env.REACT_APP_WEATHER_KEY;
     if (!key) return callback([]);
-    const result=await search({
+    const result = await search({
       q: inputValue,
       apikey: key,
-    }).unwrap()
-    debugger;
-    return callback(result);
+    }).unwrap();
+
+    return callback(
+      result.map((city) => ({ value: city.Key, label: city.LocalizedName }))
+    );
   };
 
   const handleInputChange = (newValue: string) => {
     const inputValue = newValue.replace(/\W/g, "");
-    setValue(value);
     return inputValue;
   };
 
   return (
     <div>
       <AsyncSelect
+        isClearable
         cacheOptions
         //@ts-ignore
         loadOptions={loadOptions}
-        defaultOptions
+        defaultOptions={data?.map((city) => ({
+          value: city.Key,
+          label: city.LocalizedName,
+        }))}
+        onChange={(selectedOption) => {
+          if (selectedOption) {
+            dispatch(setSelectedCityTitle(selectedOption.label));
+            dispatch(setSelectedCityKey(selectedOption.value));
+          }
+        }}
+        defaultValue={[{ value: "215854", label: "Tel Aviv" }]}
         onInputChange={handleInputChange}
       />
     </div>

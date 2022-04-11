@@ -12,7 +12,7 @@ const NavBar: React.FC<NavBarProps> = (props) => {
   return (
     <nav className="flex gap-2">
       {navigation.map((navigation) => (
-        <Button {...navigation} />
+        <Button {...navigation} key={navigation.route}/>
       ))}
     </nav>
   );

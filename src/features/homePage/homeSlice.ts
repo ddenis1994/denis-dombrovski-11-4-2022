@@ -1,28 +1,35 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { RootState } from '../../app/store'
+
+type InitialState = {
+    selectedCityKey: string;
+    selectedCityTitle: string
+
+}
+const initialState: InitialState = {
+    selectedCityKey: '215854',
+    selectedCityTitle: 'Tel Aviv',
+}
+
 
 export const homeSlice = createSlice({
     name: 'home',
-    initialState: {
-        value: 0
-    },
+    initialState,
     reducers: {
-        increment: state => {
-            // Redux Toolkit allows us to write "mutating" logic in reducers. It
-            // doesn't actually mutate the state because it uses the Immer library,
-            // which detects changes to a "draft state" and produces a brand new
-            // immutable state based off those changes
-            state.value += 1
+        setSelectedCityKey: (state, action) => {
+            state.selectedCityKey = action.payload
         },
-        decrement: state => {
-            state.value -= 1
-        },
-        incrementByAmount: (state, action) => {
-            state.value += action.payload
+        setSelectedCityTitle: (state, action) => {
+            state.selectedCityTitle = action.payload
         }
+
     }
 })
 
 
-export const { increment, decrement, incrementByAmount } = homeSlice.actions
+export const { setSelectedCityKey, setSelectedCityTitle } = homeSlice.actions
 
 export default homeSlice.reducer
+
+export const selectCityKey = (state: RootState) => state.homeSlice.selectedCityKey
+export const selectCityTitle = (state: RootState) => state.homeSlice.selectedCityTitle
