@@ -3,11 +3,13 @@ import counterReducer from '../features/counter/counterSlice';
 import homeSlice from '../features/homePage/homeSlice';
 import { weatherApi } from '../service/weatherService';
 import { setupListeners } from '@reduxjs/toolkit/query'
+import favoriteSlice from '../features/favorites/favoritesSlice';
 
 export const store = configureStore({
   reducer: {
     counter: counterReducer,
     homeSlice: homeSlice,
+    favorite: favoriteSlice,
     [weatherApi.reducerPath]: weatherApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>

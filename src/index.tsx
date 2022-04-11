@@ -8,6 +8,7 @@ import { Provider } from "react-redux";
 import * as serviceWorker from "./serviceWorker";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { HomePage } from "./features/homePage/HomePage";
+import Favorites from "./features/favorites/Favorites";
 
 const container = document.getElementById('root');
 const root = createRoot(container);
@@ -20,7 +21,7 @@ root.render(
           <Route path="/" element={<App />}>
             <Route path="" element={<HomePage/>} />
             <Route path="home" element={<HomePage/>} />
-            <Route path="favorites" element={<div>Favorites</div>} />
+            <Route path="favorites" element={<Favorites/>} />
           </Route>
         </Routes>
       </Provider>
