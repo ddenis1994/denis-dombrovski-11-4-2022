@@ -17,6 +17,7 @@ const NextFiveDays = () => {
       <div className="grid grid-flow-col gap-2 ">
         {data?.DailyForecasts.map((forecast) => (
           <LocationCard
+            key={forecast.Date}
             Date={forecast.Date}
             Temperature={{
               Minimum: forecast.Temperature.Minimum.Value,

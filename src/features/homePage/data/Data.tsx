@@ -1,16 +1,29 @@
 import React, { useMemo } from "react";
-import { useAppSelector } from "../../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { selectCityKey, selectCityTitle } from "../homeSlice";
 import { useGetCurrentWeatherQuery } from "../../../service/weatherService";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import NextFiveDays from "./NextFiveDays";
+import {
+  addOrRemoveFavorite,
+  isSelectedCity,
+} from "../../favorites/favoritesSlice";
+import { useSearchParams } from "react-router-dom";
 
 const Data = () => {
   const selectedKey = useAppSelector(selectCityKey);
   const selectedTitle = useAppSelector(selectCityTitle);
+  const dispatch = useAppDispatch();
+  const [searchParams] = useSearchParams();
+
+  const isInFavorites = useAppSelector((state) =>
+    isSelectedCity(state, selectedKey)
+  );
+  const cityKeyFromParams = searchParams.get("cityKey");
+
   const { data } = useGetCurrentWeatherQuery({
-    cityKey: selectedKey,
+    cityKey: cityKeyFromParams ?? selectedKey,
     apikey: process.env.REACT_APP_WEATHER_KEY ?? "",
   });
 
@@ -33,10 +46,15 @@ const Data = () => {
               <div>{data?.[0].Temperature?.[temperatureData]?.Value}</div>
             </div>
             <div>
-              <button className=" items-center px-1 py-0.5 block border rounded-md hover:bg-gray-500 hover:text-white transition-colors ease-out">
+              <button
+                onClick={() => dispatch(addOrRemoveFavorite(selectedKey))}
+                className=" items-center px-1 py-0.5 block border rounded-md hover:bg-gray-500 hover:text-white transition-colors ease-out"
+              >
                 <div className="flex gap-1 items-center">
                   <FontAwesomeIcon icon={faHeart} />
-                  <div>Add to Favorites</div>
+                  <div>
+                    {isInFavorites ? "Remove from" : "Add to"} Favorites
+                  </div>
                 </div>
               </button>
             </div>

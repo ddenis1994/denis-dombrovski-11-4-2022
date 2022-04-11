@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import AsyncSelect from "react-select/async";
 import { useAppDispatch } from "../../../app/hooks";
 import { useLazyAutoCompleteQuery } from "../../../service/weatherService";
@@ -6,8 +7,8 @@ import { setSelectedCityKey, setSelectedCityTitle } from "../homeSlice";
 
 const Search = () => {
   const dispatch = useAppDispatch();
-  const [search, { data, isLoading, isFetching, isError }] =
-    useLazyAutoCompleteQuery();
+  const [search, { data }] = useLazyAutoCompleteQuery();
+  const [, setSearchParams] = useSearchParams();
 
   useEffect(() => {
     const loadDefaultValues = async () => {
@@ -39,6 +40,7 @@ const Search = () => {
 
   const handleInputChange = (newValue: string) => {
     const inputValue = newValue.replace(/\W/g, "");
+    setSearchParams({ cityTitle: inputValue });
     return inputValue;
   };
 
@@ -57,6 +59,10 @@ const Search = () => {
           if (selectedOption) {
             dispatch(setSelectedCityTitle(selectedOption.label));
             dispatch(setSelectedCityKey(selectedOption.value));
+            setSearchParams({
+              cityKey: selectedOption.value,
+              cityTitle: selectedOption.label,
+            });
           }
         }}
         defaultValue={[{ value: "215854", label: "Tel Aviv" }]}
