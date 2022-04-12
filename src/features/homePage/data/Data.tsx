@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
-import { selectCityKey, selectCityTitle } from "../homeSlice";
+import { selectCity } from "../homeSlice";
 import { useGetCurrentWeatherQuery } from "../../../service/weatherService";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
@@ -12,20 +12,20 @@ import {
 import { useSearchParams } from "react-router-dom";
 
 const Data = () => {
-  const selectedKey = useAppSelector(selectCityKey);
-  const selectedTitle = useAppSelector(selectCityTitle);
+  const city = useAppSelector(selectCity);
+
   const dispatch = useAppDispatch();
   const [searchParams] = useSearchParams();
 
   const isInFavorites = useAppSelector((state) =>
-    isSelectedCity(state, selectedKey)
+    isSelectedCity(state, city.key)
   );
-  
+
   const cityKeyFromParams = searchParams.get("cityKey");
 
   const { data } = useGetCurrentWeatherQuery(
     {
-      cityKey: cityKeyFromParams ?? selectedKey,
+      cityKey: cityKeyFromParams ?? city.key,
       apikey: process.env.REACT_APP_WEATHER_KEY ?? "",
     },
     { skip: !!process.env.STORYBOOK_MODE }
@@ -45,12 +45,12 @@ const Data = () => {
         <div>
           <div className="flex justify-between">
             <div>
-              <div>{selectedTitle}</div>
+              <div>{city.title}</div>
               <div>{data?.[0].Temperature?.[temperatureData]?.Value}</div>
             </div>
             <div>
               <button
-                onClick={() => dispatch(addOrRemoveFavorite(selectedKey))}
+                onClick={() => dispatch(addOrRemoveFavorite(city.key))}
                 className=" items-center px-1 py-0.5 block border rounded-md hover:bg-gray-500 hover:text-white transition-colors ease-out"
               >
                 <div className="flex gap-1 items-center">

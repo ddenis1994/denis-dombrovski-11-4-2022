@@ -2,6 +2,7 @@ import React from "react";
 import "tailwindcss/tailwind.css";
 import { MemoryRouter } from "react-router-dom";
 import { MINIMAL_VIEWPORTS } from '@storybook/addon-viewport';
+import "react-toggle/style.css"
 
 
 // .storybook/preview.js

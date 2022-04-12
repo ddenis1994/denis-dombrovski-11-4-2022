@@ -1,5 +1,4 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
-import counterReducer from '../features/counter/counterSlice';
 import homeSlice from '../features/homePage/homeSlice';
 import { weatherApi } from '../service/weatherService';
 import { setupListeners } from '@reduxjs/toolkit/query'
@@ -10,6 +9,7 @@ import {
   Middleware,
 } from '@reduxjs/toolkit'
 import { toast } from "react-toastify";
+import headerSlice from '../features/header/headerSlice';
 
 const rtkQueryErrorLogger: Middleware =
   (api: MiddlewareAPI) => (next) => (action) => {
@@ -26,9 +26,10 @@ const rtkQueryErrorLogger: Middleware =
 
 export const store = configureStore({
   reducer: {
-    counter: counterReducer,
+    // counter: counterReducer,
     homeSlice: homeSlice,
     favorite: favoriteSlice,
+    header: headerSlice,
     [weatherApi.reducerPath]: weatherApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>

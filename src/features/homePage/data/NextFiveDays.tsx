@@ -1,15 +1,15 @@
 import React from "react";
 import { useAppSelector } from "../../../app/hooks";
 import { useGet5DaysQuery } from "../../../service/weatherService";
-import { selectCityKey } from "../homeSlice";
+import { selectCity } from "../homeSlice";
 import LocationCard from "../../locationCard/LocationCard";
 
 const NextFiveDays = () => {
-  const selectedKey = useAppSelector(selectCityKey);
+  const city = useAppSelector(selectCity);
 
   const { data } = useGet5DaysQuery(
     {
-      cityKey: selectedKey,
+      cityKey: city.key,
       apikey: process.env.REACT_APP_WEATHER_KEY ?? "",
     },
     { skip: !!process.env.STORYBOOK_MODE }

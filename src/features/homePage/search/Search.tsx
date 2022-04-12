@@ -1,34 +1,36 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import AsyncSelect from "react-select/async";
-import { useAppDispatch } from "../../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import {
   useLazyGetCityByGeoLocationQuery,
   useLazyAutoCompleteQuery,
   useLazyGetCityByLocationKeyQuery,
 } from "../../../service/weatherService";
-import { setSelectedCityKey, setSelectedCityTitle } from "../homeSlice";
+import { selectCity, setSelectedCity } from "../homeSlice";
 
 const Search = () => {
   const dispatch = useAppDispatch();
   const [search, { data }] = useLazyAutoCompleteQuery();
   const [findByGeoLocation] = useLazyGetCityByGeoLocationQuery();
-  const [getByKeyId, { data: defaultData }] =
-    useLazyGetCityByLocationKeyQuery();
+  const [getByKeyId] = useLazyGetCityByLocationKeyQuery();
+
   const [searchParams, setSearchParams] = useSearchParams();
 
-  useEffect(() => {
-    const defaultCity = searchParams.get("cityKey");
-    const key = process.env.REACT_APP_WEATHER_KEY;
-    if (!key || !defaultCity) return;
-    getByKeyId({
-      apikey: key,
-      locationKey: defaultCity,
-    })
-      .unwrap()
-      .then(console.log)
-      .catch(console.log);
-  }, [getByKeyId, searchParams]);
+  const localArea = useAppSelector(selectCity);
+
+  // useEffect(() => {
+  //   const defaultCity = searchParams.get("cityKey");
+  //   const key = process.env.REACT_APP_WEATHER_KEY;
+  //   if (!key || !defaultCity) return;
+  //   getByKeyId({
+  //     apikey: key,
+  //     locationKey: defaultCity,
+  //   })
+  //     .unwrap()
+  //     .then(console.log)
+  //     .catch(console.log);
+  // }, [getByKeyId, searchParams]);
 
   useEffect(() => {
     const success: PositionCallback = (position) => {
@@ -43,15 +45,10 @@ const Search = () => {
         apikey: key,
       });
     };
-
-    function error() {
-      // status.textContent = "Unable to retrieve your location";
-    }
-    if (!navigator.geolocation) {
-    } else {
-      navigator.geolocation.getCurrentPosition(success, error);
-    }
-  }, [findByGeoLocation]);
+    const cityKey = searchParams.get("cityKey");
+    if (navigator.geolocation && !cityKey)
+      navigator.geolocation.getCurrentPosition(success);
+  }, [findByGeoLocation, searchParams]);
 
   useEffect(() => {
     const loadDefaultValues = async () => {
@@ -62,8 +59,14 @@ const Search = () => {
         apikey: key,
       }).unwrap();
     };
+
     loadDefaultValues();
   }, [search]);
+
+  const defaultValue = useMemo(
+    () => (localArea ? [{ value: localArea.key, label: localArea.title }] : []),
+    [localArea]
+  );
 
   const loadOptions = (
     inputValue: string,
@@ -90,29 +93,32 @@ const Search = () => {
   };
 
   return (
-    <div>
-      <AsyncSelect
-        isClearable
-        cacheOptions
-        loadOptions={loadOptions}
-        defaultOptions={data?.map((city) => ({
-          value: city.Key,
-          label: city.LocalizedName,
-        }))}
-        onChange={(selectedOption) => {
-          if (selectedOption) {
-            dispatch(setSelectedCityTitle(selectedOption.label));
-            dispatch(setSelectedCityKey(selectedOption.value));
-            setSearchParams({
-              cityKey: selectedOption.value,
-              cityTitle: selectedOption.label,
-            });
-          }
-        }}
-        defaultValue={[{ value: "215854", label: "Tel Aviv" }]}
-        onInputChange={handleInputChange}
-      />
-    </div>
+    <AsyncSelect
+      isClearable
+      cacheOptions
+      loadOptions={loadOptions}
+      defaultOptions={data?.map((city) => ({
+        value: city.Key,
+        label: city.LocalizedName,
+      }))}
+      onChange={(selectedOption) => {
+        if (selectedOption) {
+          dispatch(
+            setSelectedCity({
+              title: selectedOption.label,
+              key: selectedOption.value,
+            })
+          );
+
+          setSearchParams({
+            cityKey: selectedOption.value,
+            cityTitle: selectedOption.label,
+          });
+        }
+      }}
+      defaultValue={defaultValue}
+      onInputChange={handleInputChange}
+    />
   );
 };
 

@@ -1,14 +1,20 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { RootState } from '../../app/store'
+import { weatherApi } from '../../service/weatherService';
 
 type InitialState = {
-    selectedCityKey: string;
-    selectedCityTitle: string
+    city: {
+        key: string;
+        title: string;
+    }
 
 }
 const initialState: InitialState = {
-    selectedCityKey: '215854',
-    selectedCityTitle: 'Tel Aviv',
+    city: {
+        key: '215854',
+        title: 'Tel Aviv'
+    },
+
 }
 
 
@@ -16,20 +22,33 @@ export const homeSlice = createSlice({
     name: 'home',
     initialState,
     reducers: {
-        setSelectedCityKey: (state, action) => {
-            state.selectedCityKey = action.payload
+        setSelectedCity: (state, action: PayloadAction<{
+            key: string;
+            title: string;
+        }>) => {
+            state.city = action.payload
         },
-        setSelectedCityTitle: (state, action) => {
-            state.selectedCityTitle = action.payload
-        }
-
+    },
+    extraReducers: (builder) => {
+        builder
+            .addMatcher(weatherApi.endpoints.getCurrentWeather.matchFulfilled, (state, action) => {
+                // state.selectedCityKey = action.payload.city.id
+                // state.selectedCityTitle = action.payload.city.name
+            })
+            .addMatcher(weatherApi.endpoints.getCityByGeoLocation.matchFulfilled, (state, action) => {
+                state.city = {
+                    key: action.payload.Key,
+                    title: action.payload.LocalizedName
+                }
+            })
+            .addMatcher(weatherApi.endpoints.getCityByLocationKey.matchFulfilled, (state, action) => {
+            })
     }
 })
 
 
-export const { setSelectedCityKey, setSelectedCityTitle } = homeSlice.actions
+export const { setSelectedCity } = homeSlice.actions
 
 export default homeSlice.reducer
 
-export const selectCityKey = (state: RootState) => state.homeSlice.selectedCityKey
-export const selectCityTitle = (state: RootState) => state.homeSlice.selectedCityTitle
+export const selectCity = (state: RootState) => state.homeSlice.city

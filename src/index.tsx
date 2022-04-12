@@ -12,6 +12,7 @@ import { HomePage } from "./features/homePage/HomePage";
 import Favorites from "./features/favorites/Favorites";
 import { ToastContainer } from "react-toastify";
 import { toast } from "react-toastify";
+import "react-toggle/style.css"
 
 const container = document.getElementById("root");
 const root = createRoot(container);
