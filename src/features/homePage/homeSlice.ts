@@ -7,13 +7,41 @@ type InitialState = {
         key: string;
         title: string;
     }
+    WeatherText: string;
+    Temperature: {
+        Unit: string;
+        UnitType: number
+        Value: number
+    },
+    nextFiveDays: {
+        Date: string;
+        Temperature: {
+            Minimum: {
+                Value: number;
+                Unit: string;
+
+            };
+            Maximum: {
+                Value: number;
+                Unit: string;
+
+            };
+        }
+    }[]
 
 }
-const initialState: InitialState = {
+export const initialState: InitialState = {
     city: {
         key: '215854',
         title: 'Tel Aviv'
     },
+    WeatherText: "",
+    Temperature: {
+        Unit: "F",
+        UnitType: 0,
+        Value: 0
+    },
+    nextFiveDays: []
 
 }
 
@@ -28,12 +56,15 @@ export const homeSlice = createSlice({
         }>) => {
             state.city = action.payload
         },
+
     },
     extraReducers: (builder) => {
         builder
             .addMatcher(weatherApi.endpoints.getCurrentWeather.matchFulfilled, (state, action) => {
-                // state.selectedCityKey = action.payload.city.id
-                // state.selectedCityTitle = action.payload.city.name
+                if (action.payload.length < 1) return state
+                state.WeatherText = action.payload[0].WeatherText;
+                const keys = Object.keys(action.payload[0].Temperature)
+                state.Temperature = action.payload[0].Temperature[keys[0]];
             })
             .addMatcher(weatherApi.endpoints.getCityByGeoLocation.matchFulfilled, (state, action) => {
                 state.city = {
@@ -43,6 +74,15 @@ export const homeSlice = createSlice({
             })
             .addMatcher(weatherApi.endpoints.getCityByLocationKey.matchFulfilled, (state, action) => {
             })
+            .addMatcher(weatherApi.endpoints.get5Days.matchFulfilled, (state, action) => {
+                state.nextFiveDays = action.payload.DailyForecasts.map(day => {
+                    return {
+                        Date: day.Date,
+                        Temperature: day.Temperature
+                    }
+                })
+            }
+            )
     }
 })
 
@@ -52,3 +92,6 @@ export const { setSelectedCity } = homeSlice.actions
 export default homeSlice.reducer
 
 export const selectCity = (state: RootState) => state.homeSlice.city
+export const selectWeatherText = (state: RootState) => state.homeSlice.WeatherText
+export const selectTemperature = (state: RootState) => state.homeSlice.Temperature
+export const selectNextFiveDays = (state: RootState) => state.homeSlice.nextFiveDays

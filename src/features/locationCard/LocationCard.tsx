@@ -12,6 +12,7 @@ type LocationCardProps = {
   Temperature: {
     Minimum: number;
     Maximum: number;
+    Unit: string;
   };
   handleRemove?: (cityKey: string) => void;
 };
@@ -58,7 +59,7 @@ export const LocationCard: React.FC<LocationCardProps> = (props) => {
           {title && <div className="text-xl font-bold">{title}</div>}
           {Date && <div>{moment(Date).format("dddd ,Do")}</div>}
           <div className="text-center">
-            {Temperature.Minimum} - {Temperature.Maximum}
+            {Temperature.Minimum} - {Temperature.Maximum} {Temperature.Unit}
           </div>
           <div className="mt-12 hover:underline">click hare for more info</div>
         </NavLink>
