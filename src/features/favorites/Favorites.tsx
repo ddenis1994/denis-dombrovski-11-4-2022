@@ -7,7 +7,7 @@ type FavoritesProps = {};
 
 const Favorites: React.FC<FavoritesProps> = () => {
   const favorites = useAppSelector(selectFavoritesIds);
-  
+
   if (favorites.length < 1)
     return (
       <div className="flex items-center justify-center h-full">
