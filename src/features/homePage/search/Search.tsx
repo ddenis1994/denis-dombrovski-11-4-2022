@@ -10,10 +10,12 @@ import { setSelectedCityKey, setSelectedCityTitle } from "../homeSlice";
 
 const Search = () => {
   const dispatch = useAppDispatch();
-  const [search, { data }] = useLazyAutoCompleteQuery();
-  const [findByGeoLocation, { data: result }] =
+  const [search, { data, error }] = useLazyAutoCompleteQuery();
+  const [findByGeoLocation, { error: geoLocationError }] =
     useLazyGetCityByGeoLocationQuery();
-  const [, setSearchParams] = useSearchParams();
+  const [searchParms, setSearchParams] = useSearchParams();
+
+
 
   useEffect(() => {
     const success: PositionCallback = (position) => {
@@ -74,6 +76,7 @@ const Search = () => {
 
   return (
     <div>
+
       <AsyncSelect
         isClearable
         cacheOptions
