@@ -7,10 +7,13 @@ import LocationCard from "../../locationCard/LocationCard";
 const NextFiveDays = () => {
   const selectedKey = useAppSelector(selectCityKey);
 
-  const { data } = useGet5DaysQuery({
-    cityKey: selectedKey,
-    apikey: process.env.REACT_APP_WEATHER_KEY ?? "",
-  });
+  const { data } = useGet5DaysQuery(
+    {
+      cityKey: selectedKey,
+      apikey: process.env.REACT_APP_WEATHER_KEY ?? "",
+    },
+    { skip: !!process.env.STORYBOOK_MODE }
+  );
 
   return (
     <div className="p-2">

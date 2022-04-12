@@ -13,7 +13,7 @@ import { toast } from "react-toastify";
 
 const rtkQueryErrorLogger: Middleware =
   (api: MiddlewareAPI) => (next) => (action) => {
-    // RTK Query uses `createAsyncThunk` from redux-toolkit under the hood, so we're able to utilize these matchers!
+
     if (isRejectedWithValue(action)) {
       console.warn('We got a rejected action!')
       if (503 === action.payload.status && !toast.isActive('serverError')) {

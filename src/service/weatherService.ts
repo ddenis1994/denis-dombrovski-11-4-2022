@@ -14,7 +14,7 @@ export const weatherApi = createApi({
             language?: string,
         }>({
             //@ts-ignore
-            query: (props) => `locations/v1/cities/autocomplete?${Object.keys(props).map(key => props[key] ? `${key}=${props[key]}` : "").join('&')}`,
+            query: (props) => `locations/v1/cities/autocomplete?${Object.keys(props).map(key => props[key] ? `${key}=${toString(props[key])}` : "").join('&')}`,
 
         }),
         getCurrentWeather: builder.query<Weather.CurrentWeather.Return, {
@@ -30,10 +30,13 @@ export const weatherApi = createApi({
             query: ({ apikey, cityKey }) => `forecasts/v1/daily/5day/${cityKey}?apikey=${apikey}`,
         }),
         getCityByGeoLocation: builder.query<Weather.CityByGeoLocation.Response, Weather.CityByGeoLocation.Request>({
-            query: ({ apikey,q }) => `locations/v1/cities/geoposition/search?apikey=${apikey}&q=${q}`,
+            query: ({ apikey, q }) => `locations/v1/cities/geoposition/search?apikey=${apikey}&q=${q}`,
         }),
+        getCityByLocationKey: builder.query({
+            query: ({ apikey, locationKey }) => `locations/v1/${locationKey}?apikey=${apikey}`,
+        })
     }),
 })
 
 
-export const { useGetCurrentWeatherQuery, useGet5DaysQuery, useLazyAutoCompleteQuery,useLazyGetCityByGeoLocationQuery } = weatherApi
+export const { useGetCurrentWeatherQuery, useGet5DaysQuery, useLazyAutoCompleteQuery, useLazyGetCityByGeoLocationQuery,useLazyGetCityByLocationKeyQuery } = weatherApi

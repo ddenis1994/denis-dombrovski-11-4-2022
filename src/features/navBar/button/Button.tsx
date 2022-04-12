@@ -16,7 +16,7 @@ const Button: React.FC<ButtonProps> = (props) => {
       style={({ isActive }) => {
         return {
           color: isActive ? "white" : "",
-          background: isActive ? "rgb(107 114 128" : "",
+          background: isActive ? "rgb(107 114 128)" : "",
         };
       }}
       to={route}

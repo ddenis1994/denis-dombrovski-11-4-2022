@@ -33,6 +33,7 @@ export const parameters = {
   },
   viewport: { viewports: { ...MINIMAL_VIEWPORTS, ...customViewports } },
 
+
 }
 
 export const decorators = [

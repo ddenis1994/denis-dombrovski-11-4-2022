@@ -20,12 +20,16 @@ const Data = () => {
   const isInFavorites = useAppSelector((state) =>
     isSelectedCity(state, selectedKey)
   );
+  
   const cityKeyFromParams = searchParams.get("cityKey");
 
-  const { data } = useGetCurrentWeatherQuery({
-    cityKey: cityKeyFromParams ?? selectedKey,
-    apikey: process.env.REACT_APP_WEATHER_KEY ?? "",
-  });
+  const { data } = useGetCurrentWeatherQuery(
+    {
+      cityKey: cityKeyFromParams ?? selectedKey,
+      apikey: process.env.REACT_APP_WEATHER_KEY ?? "",
+    },
+    { skip: !!process.env.STORYBOOK_MODE }
+  );
 
   const temperatureData: string = useMemo(
     () =>
@@ -34,7 +38,6 @@ const Data = () => {
       ) ?? "",
     [data]
   );
-  console.log(data);
 
   return (
     <div className="flex items-center justify-center h-full">

@@ -5,17 +5,30 @@ import { useAppDispatch } from "../../../app/hooks";
 import {
   useLazyGetCityByGeoLocationQuery,
   useLazyAutoCompleteQuery,
+  useLazyGetCityByLocationKeyQuery,
 } from "../../../service/weatherService";
 import { setSelectedCityKey, setSelectedCityTitle } from "../homeSlice";
 
 const Search = () => {
   const dispatch = useAppDispatch();
-  const [search, { data, error }] = useLazyAutoCompleteQuery();
-  const [findByGeoLocation, { error: geoLocationError }] =
-    useLazyGetCityByGeoLocationQuery();
-  const [searchParms, setSearchParams] = useSearchParams();
+  const [search, { data }] = useLazyAutoCompleteQuery();
+  const [findByGeoLocation] = useLazyGetCityByGeoLocationQuery();
+  const [getByKeyId, { data: defaultData }] =
+    useLazyGetCityByLocationKeyQuery();
+  const [searchParams, setSearchParams] = useSearchParams();
 
-
+  useEffect(() => {
+    const defaultCity = searchParams.get("cityKey");
+    const key = process.env.REACT_APP_WEATHER_KEY;
+    if (!key || !defaultCity) return;
+    getByKeyId({
+      apikey: key,
+      locationKey: defaultCity,
+    })
+      .unwrap()
+      .then(console.log)
+      .catch(console.log);
+  }, [getByKeyId, searchParams]);
 
   useEffect(() => {
     const success: PositionCallback = (position) => {
@@ -52,20 +65,22 @@ const Search = () => {
     loadDefaultValues();
   }, [search]);
 
-  const loadOptions = async (
+  const loadOptions = (
     inputValue: string,
-    callback: (options: unknown[]) => void
+    callback: (options: { value: string; label: string }[]) => void
   ) => {
     const key = process.env.REACT_APP_WEATHER_KEY;
     if (!key) return callback([]);
-    const result = await search({
+    search({
       q: inputValue,
       apikey: key,
-    }).unwrap();
-
-    return callback(
-      result.map((city) => ({ value: city.Key, label: city.LocalizedName }))
-    );
+    })
+      .unwrap()
+      .then((result) =>
+        callback(
+          result.map((city) => ({ value: city.Key, label: city.LocalizedName }))
+        )
+      );
   };
 
   const handleInputChange = (newValue: string) => {
@@ -76,11 +91,9 @@ const Search = () => {
 
   return (
     <div>
-
       <AsyncSelect
         isClearable
         cacheOptions
-        //@ts-ignore
         loadOptions={loadOptions}
         defaultOptions={data?.map((city) => ({
           value: city.Key,

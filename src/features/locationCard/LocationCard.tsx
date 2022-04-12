@@ -35,7 +35,7 @@ export const LocationCard: React.FC<LocationCardProps> = (props) => {
       <animated.div style={style}>
         <NavLink
           to={`/home?cityKey=${cityKey}`}
-          className="border bg-gray-50 flex relative items-center justify-center flex-col  max-h-44 rounded-md p-1 hover:ring flex-shrink-0"
+          className="border dark:bg-slate-600 dark:text-white bg-gray-50 flex relative items-center justify-center flex-col  max-h-44 rounded-md p-1 hover:ring flex-shrink-0"
         >
           {handleRemove && (
             <button

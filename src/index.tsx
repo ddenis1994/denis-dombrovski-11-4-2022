@@ -11,6 +11,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { HomePage } from "./features/homePage/HomePage";
 import Favorites from "./features/favorites/Favorites";
 import { ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 
 const container = document.getElementById("root");
 const root = createRoot(container);
@@ -18,7 +19,7 @@ const root = createRoot(container);
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <ToastContainer />
+      <ToastContainer position={toast.POSITION.BOTTOM_RIGHT}/>
       <Provider store={store}>
         <Routes>
           <Route path="/" element={<App />}>
