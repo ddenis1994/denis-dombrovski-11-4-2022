@@ -2,13 +2,41 @@ import React, { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import AsyncSelect from "react-select/async";
 import { useAppDispatch } from "../../../app/hooks";
-import { useLazyAutoCompleteQuery } from "../../../service/weatherService";
+import {
+  useLazyGetCityByGeoLocationQuery,
+  useLazyAutoCompleteQuery,
+} from "../../../service/weatherService";
 import { setSelectedCityKey, setSelectedCityTitle } from "../homeSlice";
 
 const Search = () => {
   const dispatch = useAppDispatch();
   const [search, { data }] = useLazyAutoCompleteQuery();
+  const [findByGeoLocation, { data: result }] =
+    useLazyGetCityByGeoLocationQuery();
   const [, setSearchParams] = useSearchParams();
+
+  useEffect(() => {
+    const success: PositionCallback = (position) => {
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
+      const key = process.env.REACT_APP_WEATHER_KEY;
+      if (!key) return;
+      //@ts-ignore
+      const q: `${string},${string}` = `${latitude},${longitude}`;
+      findByGeoLocation({
+        q,
+        apikey: key,
+      });
+    };
+
+    function error() {
+      // status.textContent = "Unable to retrieve your location";
+    }
+    if (!navigator.geolocation) {
+    } else {
+      navigator.geolocation.getCurrentPosition(success, error);
+    }
+  }, [findByGeoLocation]);
 
   useEffect(() => {
     const loadDefaultValues = async () => {
