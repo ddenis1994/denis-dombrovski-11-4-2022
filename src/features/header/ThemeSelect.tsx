@@ -7,7 +7,7 @@ const ThemeSelect = () => {
 
   const themeMode = useAppSelector(selectDarkMode);
 
-  const handleChange = useCallback(() => {
+  const handleChange = useCallback(() => {  
     if (
       localStorage.theme === "dark" ||
       (!("theme" in localStorage) &&
@@ -17,6 +17,28 @@ const ThemeSelect = () => {
     } else {
       document.documentElement.classList.remove("dark");
     }
+  }, []);
+
+  useEffect(() => {
+    if (localStorage.theme !== "auto") return;
+    const handleChangeInTherme = (event: MediaQueryListEvent) => {
+      const newColorScheme = event.matches ? "dark" : "light";
+      if (newColorScheme === "dark") {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
+    };
+
+    window
+      .matchMedia("(prefers-color-scheme: dark)")
+      .addEventListener("change", handleChangeInTherme);
+
+    return () => {
+      window
+        .matchMedia("(prefers-color-scheme: dark)")
+        .removeEventListener("change", handleChangeInTherme);
+    };
   }, []);
 
   useEffect(() => {
