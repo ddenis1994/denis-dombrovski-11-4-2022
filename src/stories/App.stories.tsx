@@ -4,7 +4,7 @@ import { Provider } from "react-redux";
 import { RootState } from "../app/store";
 import favoriteSlice from "../features/favorites/favoritesSlice";
 import headerSlice from "../features/header/headerSlice";
-import homeSlice from "../features/homePage/homeSlice";
+import homeSlice, { initialState as homeInitialState } from "../features/homePage/homeSlice";
 import { FullApp } from "../FullApp";
 
 export default {
@@ -19,7 +19,7 @@ const createStore = (preloadState?: Partial<RootState>) =>
       favorite: favoriteSlice,
       header: headerSlice,
     },
-    // preloadedState: preloadState,
+    preloadedState: preloadState,
   });
 
 const Template: ComponentStory<typeof FullApp> = (args) => {
@@ -32,7 +32,52 @@ Primary.args = {};
 
 Primary.decorators = [
   (Story) => (
-    <Provider store={createStore()}>
+    <Provider
+      store={createStore({
+        favorite: { favoritesIds: ["1", "2", "3", "4", "5", "6", "7"] },
+        homeSlice: {
+          ...homeInitialState,
+          WeatherText: "sunny",
+          nextFiveDays: [
+            {
+              Date: "2020-06-01",
+              Temperature: {
+                Minimum: { Value: 10, Unit: "C" },
+                Maximum: { Value: 20, Unit: "C" },
+              },
+            },
+            {
+              Date: "2020-06-02",
+              Temperature: {
+                Minimum: { Value: 10, Unit: "C" },
+                Maximum: { Value: 20, Unit: "C" },
+              },
+            },
+            {
+              Date: "2020-06-03",
+              Temperature: {
+                Minimum: { Value: 10, Unit: "C" },
+                Maximum: { Value: 20, Unit: "C" },
+              },
+            },
+            {
+              Date: "2020-06-04",
+              Temperature: {
+                Minimum: { Value: 10, Unit: "C" },
+                Maximum: { Value: 20, Unit: "C" },
+              },
+            },
+            {
+              Date: "2020-06-05",
+              Temperature: {
+                Minimum: { Value: 10, Unit: "C" },
+                Maximum: { Value: 20, Unit: "C" },
+              },
+            },
+          ],
+        },
+      })}
+    >
       <Story />
     </Provider>
   ),

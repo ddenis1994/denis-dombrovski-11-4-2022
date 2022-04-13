@@ -21,9 +21,7 @@ const ThemeSelect = () => {
 
   useEffect(() => {
     handleChange();
-  }, [handleChange,themeMode]);
-
- 
+  }, [handleChange, themeMode]);
 
   const themeOptions = [
     {
@@ -41,21 +39,24 @@ const ThemeSelect = () => {
   ];
 
   return (
-    <select
-      className="border px-1 py-1 rounded-md bg-transparent"
-      name="theme"
-      value={themeMode}
-      onChange={(e) => {
-        dispatch(setThemeMode(e.target.value as typeof themeMode));
-        localStorage.theme = e.target.value;
-      }}
-    >
-      {themeOptions.map((option) => (
-        <option key={option.value} value={option.value}>
-          {option.label}
-        </option>
-      ))}
-    </select>
+    <div>
+      <label>Theme: </label>
+      <select
+        className="border px-1 py-1 rounded-md bg-transparent"
+        name="theme"
+        value={themeMode}
+        onChange={(e) => {
+          dispatch(setThemeMode(e.target.value as typeof themeMode));
+          localStorage.theme = e.target.value;
+        }}
+      >
+        {themeOptions.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
+    </div>
   );
 };
 
