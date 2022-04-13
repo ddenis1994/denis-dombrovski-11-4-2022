@@ -1,9 +1,12 @@
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import moment from "moment";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useTransition, animated } from "react-spring";
+import { useAppSelector } from "../../app/hooks";
+import { cToF, fToC } from "../../util/tempatureMethodsTransoform";
+import { selectTemperatureMethod } from "../header/headerSlice";
 
 type LocationCardProps = {
   Date?: string;
@@ -18,7 +21,15 @@ type LocationCardProps = {
 };
 
 export const LocationCard: React.FC<LocationCardProps> = (props) => {
-  const { Date, Temperature, title, cityKey, handleRemove } = props;
+  const {
+    Date,
+    Temperature: temperature,
+    title,
+    cityKey,
+    handleRemove,
+  } = props;
+
+  const temperatureMethod = useAppSelector(selectTemperatureMethod);
   const [deleted, setDeleted] = useState(false);
 
   const transition = useTransition(!deleted, {
@@ -30,6 +41,15 @@ export const LocationCard: React.FC<LocationCardProps> = (props) => {
     },
     leave: { opacity: 0 },
   });
+
+  const temperatureString = useMemo(() => {
+    if (temperatureMethod === "C" && temperature.Unit === "F") {
+      return `${fToC(temperature?.Minimum)} - ${temperature?.Maximum}°C`;
+    } else if (temperatureMethod === "F" && temperature.Unit === "C") {
+      return `${cToF(temperature?.Minimum)} - ${temperature?.Maximum}°F`;
+    } else
+      return `${temperature?.Minimum} - ${temperature?.Maximum}°${temperature?.Unit}`;
+  }, [temperatureMethod, temperature]);
 
   return transition((style, item) =>
     item ? (
@@ -58,9 +78,7 @@ export const LocationCard: React.FC<LocationCardProps> = (props) => {
           )}
           {title && <div className="text-xl font-bold">{title}</div>}
           {Date && <div>{moment(Date).format("dddd ,Do")}</div>}
-          <div className="text-center">
-            {Temperature.Minimum} - {Temperature.Maximum} {Temperature.Unit}
-          </div>
+          <div className="text-center">{temperatureString}</div>
           <div className="mt-12 hover:underline">click hare for more info</div>
         </NavLink>
       </animated.div>

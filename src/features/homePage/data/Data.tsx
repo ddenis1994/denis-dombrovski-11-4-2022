@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { selectCity, selectTemperature, selectWeatherText } from "../homeSlice";
 import { useGetCurrentWeatherQuery } from "../../../service/weatherService";
@@ -10,9 +10,12 @@ import {
   isSelectedCity,
 } from "../../favorites/favoritesSlice";
 import { useSearchParams } from "react-router-dom";
+import { selectTemperatureMethod } from "../../header/headerSlice";
+import { cToF, fToC } from "../../../util/tempatureMethodsTransoform";
 
 const Data = () => {
   const city = useAppSelector(selectCity);
+  const temperatureMethod = useAppSelector(selectTemperatureMethod);
 
   const dispatch = useAppDispatch();
   const [searchParams] = useSearchParams();
@@ -33,6 +36,14 @@ const Data = () => {
     { skip: !!process.env.STORYBOOK_MODE }
   );
 
+  const temperatureString = useMemo(() => {
+    if (temperatureMethod === "C" && temperature.Unit === "F") {
+      return `${fToC(temperature?.Value)}°C`;
+    } else if (temperatureMethod === "F" && temperature.Unit === "C") {
+      return `${cToF(temperature?.Value)}°F`;
+    } else return `${temperature?.Value}°${temperature?.Unit}`;
+  }, [temperatureMethod, temperature]);
+
   return (
     <div className="flex items-center justify-center h-full">
       <div className="border w-full h-full p-4 flex justify-between flex-col ">
@@ -40,9 +51,7 @@ const Data = () => {
           <div className="flex justify-between">
             <div>
               <div>{city.title}</div>
-              <div>
-                {temperature?.Value} {temperature?.Unit}
-              </div>
+              <div>{temperatureString}</div>
             </div>
             <div>
               <button
