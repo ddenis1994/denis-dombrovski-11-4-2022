@@ -46,7 +46,11 @@ const Data = () => {
             </div>
             <div>
               <button
-                onClick={() => dispatch(addOrRemoveFavorite(city.key))}
+                onClick={() =>
+                  dispatch(
+                    addOrRemoveFavorite({ id: city.key, title: city.title })
+                  )
+                }
                 className=" items-center px-1 py-0.5 block border rounded-md hover:bg-gray-500 hover:text-white transition-colors ease-out"
               >
                 <div className="flex gap-1 items-center">

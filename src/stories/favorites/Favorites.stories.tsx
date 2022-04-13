@@ -42,7 +42,19 @@ SingleFavorite.decorators = [
   (Story) => (
     <Provider
       store={createStore({
-        favorite: { favoritesIds: ["1", "2", "3", "4", "5", "6", "7"] },
+        favorite: {
+          favoritesIds: [
+            { id: "1", title: "tlv" },
+            { id: "2", title: "tlv" },
+            { id: "3", title: "tlv" },
+            { id: "4", title: "tlv" },
+            { id: "5", title: "tlv" },
+            { id: "6", title: "tlv" },
+            { id: "7", title: "tlv" },
+            { id: "8", title: "tlv" },
+            { id: "9", title: "tlv" },
+          ],
+        },
       })}
     >
       <Story />

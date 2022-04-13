@@ -5,7 +5,7 @@ import Header from "./features/header/Header";
 
 function App() {
   return (
-    <div className="p-2 flex flex-col gap-2 h-screen w-screen dark:text-white">
+    <div className="p-2 flex flex-col gap-2 h-screen w-screen dark:text-white dark:bg-slate-700 ">
     
       <Header />
       <div className={`border w-full`} />

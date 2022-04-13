@@ -5,12 +5,12 @@ import LocationCard from "../locationCard/LocationCard";
 import { addOrRemoveFavorite } from "./favoritesSlice";
 type LoadFavoriteProps = {
   cityKey: string;
+  title: string;
 };
 
 const LoadFavorite: React.FC<LoadFavoriteProps> = (props) => {
-  const { cityKey } = props;
+  const { cityKey, title } = props;
   const dispatch = useAppDispatch();
-  
 
   const { data } = useGetCurrentWeatherQuery(
     {
@@ -23,9 +23,10 @@ const LoadFavorite: React.FC<LoadFavoriteProps> = (props) => {
   return (
     <LocationCard
       handleRemove={() => {
-        dispatch(addOrRemoveFavorite(cityKey));
+        dispatch(addOrRemoveFavorite({ id: cityKey, title }));
       }}
       cityKey={cityKey}
+      title={title}
       Temperature={{
         Minimum: data?.[0].Temperature?.["Minimum"]?.Value ?? 21,
         Maximum: data?.[0].Temperature?.["Maximum"]?.Value ?? 30,

@@ -29,7 +29,7 @@ Primary.args = {};
 
 Primary.decorators = [
   (Story) => (
-    <Provider store={createStore({ favorite: { favoritesIds: [""] } })}>
+    <Provider store={createStore({ favorite: { favoritesIds: [] } })}>
       <Story />
     </Provider>
   ),

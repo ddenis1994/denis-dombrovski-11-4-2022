@@ -18,19 +18,18 @@ const Search = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const localArea = useAppSelector(selectCity);
+  const defaultCity = searchParams.get("cityKey");
+  const cityTitle = searchParams.get("cityTitle");
 
-  // useEffect(() => {
-  //   const defaultCity = searchParams.get("cityKey");
-  //   const key = process.env.REACT_APP_WEATHER_KEY;
-  //   if (!key || !defaultCity) return;
-  //   getByKeyId({
-  //     apikey: key,
-  //     locationKey: defaultCity,
-  //   })
-  //     .unwrap()
-  //     .then(console.log)
-  //     .catch(console.log);
-  // }, [getByKeyId, searchParams]);
+  useEffect(() => {
+    if (!defaultCity || !cityTitle) return;
+    dispatch(
+      setSelectedCity({
+        title: cityTitle,
+        key: defaultCity,
+      })
+    );
+  }, [cityTitle, defaultCity, dispatch, getByKeyId, searchParams]);
 
   useEffect(() => {
     const success: PositionCallback = (position) => {
@@ -63,10 +62,14 @@ const Search = () => {
     loadDefaultValues();
   }, [search]);
 
-  const defaultValue = useMemo(
-    () => (localArea ? [{ value: localArea.key, label: localArea.title }] : []),
-    [localArea]
-  );
+  const defaultValue = useMemo(() => {
+    if (defaultCity && cityTitle)
+      return { value: defaultCity, label: cityTitle };
+    else if (localArea) return { value: localArea.key, label: localArea.title };
+    else return [];
+
+    // ( localArea ? [{ value: localArea.key, label: localArea.title }] : [])
+  }, [cityTitle, defaultCity, localArea]);
 
   const loadOptions = (
     inputValue: string,

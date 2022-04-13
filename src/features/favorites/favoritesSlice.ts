@@ -1,14 +1,14 @@
 
 
-import { createSelector, createSlice } from '@reduxjs/toolkit'
+import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { RootState } from '../../app/store'
 
 type InitialState = {
-    favoritesIds: string[],
+    favoritesIds: { id: string, title: string }[],
 
 }
 const initialState: InitialState = {
-    favoritesIds: ["215854"],
+    favoritesIds: [{ id: "215854", title: "Tel Aviv" }],
 
 }
 
@@ -17,12 +17,14 @@ export const favoriteSlice = createSlice({
     name: 'favorites',
     initialState,
     reducers: {
-        addOrRemoveFavorite: (state, action) => {
-            if (state.favoritesIds.includes(action.payload)) {
-                state.favoritesIds = state.favoritesIds.filter(id => id !== action.payload)
+        addOrRemoveFavorite: (state, action: PayloadAction<{ id: string, title: string }>) => {
+            debugger;
+            if (state.favoritesIds.find(favorite => favorite.id === action.payload.id)) {
+                state.favoritesIds = state.favoritesIds.filter(id => id.id !== action.payload.id)
             } else {
                 state.favoritesIds.push(action.payload)
             }
+            return state
         }
     }
 })
@@ -35,5 +37,5 @@ export default favoriteSlice.reducer
 export const selectFavoritesIds = (state: RootState) => state.favorite.favoritesIds
 
 export const isSelectedCity = createSelector([selectFavoritesIds, (state: unknown, id: string) => id], (favoriteIds, id) => {
-    return !!favoriteIds.find(favoriteId => favoriteId === id)
+    return !!favoriteIds.find(favoriteId => favoriteId.id === id)
 })
