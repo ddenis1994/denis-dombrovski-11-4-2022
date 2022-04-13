@@ -44,11 +44,11 @@ export const LocationCard: React.FC<LocationCardProps> = (props) => {
 
   const temperatureString = useMemo(() => {
     if (temperatureMethod === "C" && temperature.Unit === "F") {
-      return `${fToC(temperature?.Minimum)} - ${temperature?.Maximum}°C`;
+      return `${fToC(temperature?.Minimum)} - ${fToC(temperature?.Maximum)} °C`;
     } else if (temperatureMethod === "F" && temperature.Unit === "C") {
-      return `${cToF(temperature?.Minimum)} - ${temperature?.Maximum}°F`;
+      return `${cToF(temperature?.Minimum)} - ${cToF(temperature?.Maximum)} °F`;
     } else
-      return `${temperature?.Minimum} - ${temperature?.Maximum}°${temperature?.Unit}`;
+      return `${temperature?.Minimum} - ${temperature?.Maximum} °${temperature?.Unit}`;
   }, [temperatureMethod, temperature]);
 
   return transition((style, item) =>
@@ -56,7 +56,7 @@ export const LocationCard: React.FC<LocationCardProps> = (props) => {
       <animated.div style={style}>
         <NavLink
           to={`/home?cityKey=${cityKey}&cityTitle=${title}`}
-          className="border dark:bg-slate-600 dark:text-white bg-gray-50 flex relative items-center justify-center flex-col  max-h-44 rounded-md p-1 hover:ring flex-shrink-0"
+          className="border min-h-max dark:bg-slate-600 h-44 dark:text-white bg-gray-50 flex relative items-center justify-center flex-col  max-h-44 rounded-md p-1 hover:ring flex-shrink-0"
         >
           {handleRemove && (
             <button
@@ -79,7 +79,11 @@ export const LocationCard: React.FC<LocationCardProps> = (props) => {
           {title && <div className="text-xl font-bold">{title}</div>}
           {Date && <div>{moment(Date).format("dddd ,Do")}</div>}
           <div className="text-center">{temperatureString}</div>
-          <div className="mt-12 hover:underline">click hare for more info</div>
+          {handleRemove && (
+            <div className="mt-12 hover:underline">
+              click hare for more info
+            </div>
+          )}
         </NavLink>
       </animated.div>
     ) : (

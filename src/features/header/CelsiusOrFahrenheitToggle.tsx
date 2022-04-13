@@ -13,7 +13,7 @@ const CelsiusOrFahrenheitToggle = () => {
     <div className="flex items-center gap-2">
       <label>Celsius/Fahrenheit</label>
       <Toggle
-        defaultChecked={true}
+        // defaultChecked={true}
         className="custom-classname"
         icons={{
           checked: (
