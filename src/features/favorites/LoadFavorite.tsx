@@ -29,6 +29,7 @@ const LoadFavorite: React.FC<LoadFavoriteProps> = (props) => {
       Temperature={{
         Minimum: data?.[0].Temperature?.["Minimum"]?.Value ?? 21,
         Maximum: data?.[0].Temperature?.["Maximum"]?.Value ?? 30,
+        Unit: data?.[0].Temperature?.["Maximum"]?.Unit ?? "C",
       }}
     />
   );

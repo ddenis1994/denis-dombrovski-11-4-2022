@@ -7,12 +7,12 @@ type ThemeMode = "light" | "dark" | "default"
 
 type InitialState = {
     temperatureMethod: TemperatureMethod,
-    darkMode: ThemeMode
+    themeMode: ThemeMode
 }
 
 const initialState: InitialState = {
     temperatureMethod: "C",
-    darkMode: "default",
+    themeMode: "default",
 }
 
 export const headerSlice = createSlice({
@@ -22,8 +22,8 @@ export const headerSlice = createSlice({
         setTemperatureMethod: (state, action: PayloadAction<TemperatureMethod>) => {
             state.temperatureMethod = action.payload
         },
-        setDarkMode: (state, action: PayloadAction<ThemeMode>) => {
-            state.darkMode = action.payload
+        setThemeMode: (state, action: PayloadAction<ThemeMode>) => {
+            state.themeMode = action.payload
         }
     },
     extraReducers: (builder) => {
@@ -32,9 +32,9 @@ export const headerSlice = createSlice({
 })
 
 
-export const { setTemperatureMethod, setDarkMode } = headerSlice.actions
+export const { setTemperatureMethod, setThemeMode } = headerSlice.actions
 
 export default headerSlice.reducer
 
-export const selectDarkMode = (state: RootState) => state.header.darkMode
+export const selectDarkMode = (state: RootState) => state.header.themeMode
 export const selectTemperatureMethod = (state: RootState) => state.header.temperatureMethod

@@ -3,16 +3,15 @@ import React from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import "react-toastify/dist/ReactToastify.css";
-import App from "./App";
 import { store } from "./app/store";
 import { Provider } from "react-redux";
 import * as serviceWorker from "./serviceWorker";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { HomePage } from "./features/homePage/HomePage";
-import Favorites from "./features/favorites/Favorites";
+import { BrowserRouter } from "react-router-dom";
+
 import { ToastContainer } from "react-toastify";
 import { toast } from "react-toastify";
-import "react-toggle/style.css"
+import "react-toggle/style.css";
+import { FullApp } from "./FullApp";
 
 const container = document.getElementById("root");
 const root = createRoot(container);
@@ -20,15 +19,9 @@ const root = createRoot(container);
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <ToastContainer position={toast.POSITION.BOTTOM_RIGHT}/>
+      <ToastContainer position={toast.POSITION.BOTTOM_RIGHT} />
       <Provider store={store}>
-        <Routes>
-          <Route path="/" element={<App />}>
-            <Route path="" element={<HomePage />} />
-            <Route path="home" element={<HomePage />} />
-            <Route path="favorites" element={<Favorites />} />
-          </Route>
-        </Routes>
+        <FullApp />
       </Provider>
     </BrowserRouter>
   </React.StrictMode>

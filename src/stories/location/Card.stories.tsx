@@ -16,6 +16,7 @@ FromFavorites.args = {
   Temperature: {
     Minimum: 20,
     Maximum: 30,
+    Unit: "C",
   },
   cityKey: "/",
   handleRemove: () => {
@@ -30,5 +31,6 @@ Primary.args = {
   Temperature: {
     Minimum: 20,
     Maximum: 30,
+    Unit: "C",
   },
 };

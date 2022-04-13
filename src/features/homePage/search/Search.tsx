@@ -59,7 +59,7 @@ const Search = () => {
         apikey: key,
       }).unwrap();
     };
-
+    if (process.env.STORYBOOK_MODE) return;
     loadDefaultValues();
   }, [search]);
 
@@ -73,7 +73,7 @@ const Search = () => {
     callback: (options: { value: string; label: string }[]) => void
   ) => {
     const key = process.env.REACT_APP_WEATHER_KEY;
-    if (!key) return callback([]);
+    if (!key || process.env.STORYBOOK_MODE) return callback([]);
     search({
       q: inputValue,
       apikey: key,

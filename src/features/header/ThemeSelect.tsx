@@ -1,12 +1,13 @@
-import React, { useEffect } from "react";
-import Select from "react-select";
+import React, { useCallback, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { selectDarkMode } from "./headerSlice";
+import { selectDarkMode, setThemeMode } from "./headerSlice";
 
 const ThemeSelect = () => {
-  useEffect(() => {
-    // localStorage.theme = 'dark'
-    // localStorage.theme = 'light'
+  const dispatch = useAppDispatch();
+
+  const themeMode = useAppSelector(selectDarkMode);
+
+  const handleChange = useCallback(() => {
     if (
       localStorage.theme === "dark" ||
       (!("theme" in localStorage) &&
@@ -18,7 +19,11 @@ const ThemeSelect = () => {
     }
   }, []);
 
-  const darkMode = useAppSelector(selectDarkMode);
+  useEffect(() => {
+    handleChange();
+  }, [handleChange,themeMode]);
+
+ 
 
   const themeOptions = [
     {
@@ -30,20 +35,27 @@ const ThemeSelect = () => {
       label: "Light",
     },
     {
-      value: "auto",
-      label: "Auto",
+      value: "default",
+      label: "Default",
     },
   ];
 
   return (
-    <Select
-      className="basic-single"
-      classNamePrefix="select"
-      //   defaultValue={colourOptions[0]}
+    <select
+      className="border px-1 py-1 rounded-md bg-transparent"
       name="theme"
-      options={themeOptions}
-      onChange={(e) => {}}
-    />
+      value={themeMode}
+      onChange={(e) => {
+        dispatch(setThemeMode(e.target.value as typeof themeMode));
+        localStorage.theme = e.target.value;
+      }}
+    >
+      {themeOptions.map((option) => (
+        <option key={option.value} value={option.value}>
+          {option.label}
+        </option>
+      ))}
+    </select>
   );
 };
 
