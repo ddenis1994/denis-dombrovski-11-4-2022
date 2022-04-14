@@ -24,6 +24,7 @@ root.render(
         <FullApp />
       </Provider>
     </BrowserRouter>
+    
   </React.StrictMode>
 );
 
