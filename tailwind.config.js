@@ -4,7 +4,11 @@ module.exports = {
   ],
   darkMode: 'class',
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        custom: "'Lora', 'Roboto', serif"
+      }
+    },
   },
   plugins: [],
 }

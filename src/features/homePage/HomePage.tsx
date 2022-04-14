@@ -10,7 +10,7 @@ export const HomePage: React.FC<HomeProps> = () => {
       <div className="w-64">
         <Search />
       </div>
-      <div className="h-full w-full">
+      <div className="h-full block overflow-y-auto w-full">
         <Data />
       </div>
     </div>

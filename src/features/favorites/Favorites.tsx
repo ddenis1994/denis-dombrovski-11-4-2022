@@ -16,14 +16,16 @@ const Favorites: React.FC<FavoritesProps> = () => {
     );
 
   return (
-    <div className="grid sm:grid-flow-row sm:items-start sm:grid-cols-3 xl:grid-cols-5 2xl:grid-cols-7 items-center justify-center gap-2 w-full p-1">
-      {favorites.map((cityId) => (
-        <LoadFavorite
-          key={cityId.id}
-          cityKey={cityId.id}
-          title={cityId.title}
-        />
-      ))}
+    <div className="block relative overflow-y-auto">
+      <div className="grid sm:grid-flow-row  sm:items-start sm:grid-cols-3 xl:grid-cols-5 2xl:grid-cols-7 items-center justify-center gap-2 w-full p-1">
+        {favorites.map((cityId) => (
+          <LoadFavorite
+            key={cityId.id}
+            cityKey={cityId.id}
+            title={cityId.title}
+          />
+        ))}
+      </div>
     </div>
   );
 };

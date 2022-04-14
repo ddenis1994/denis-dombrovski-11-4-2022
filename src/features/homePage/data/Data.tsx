@@ -45,7 +45,7 @@ const Data = () => {
   }, [temperatureMethod, temperature]);
 
   return (
-    <div className="flex items-center justify-center h-full">
+    <div className="flex items-center justify-center h-full ">
       <div className="border w-full h-full p-4 flex justify-between flex-col ">
         <div>
           <div className="flex justify-between">
