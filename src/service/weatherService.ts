@@ -5,7 +5,12 @@ import { Weather } from './autoCompleteResponse'
 export const weatherApi = createApi({
     reducerPath: 'weatherApi',
     baseQuery: fetchBaseQuery({
+        mode: 'no-cors',
         baseUrl: 'http://dataservice.accuweather.com/',
+        prepareHeaders: (headers) => {
+            headers.set('Access-Control-Allow-Origin', `*`)
+            return headers
+        },
     }),
     endpoints: (builder) => ({
         autoComplete: builder.query<Weather.AutoComplete.Response, {
