@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import AsyncSelect from "react-select/async";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
@@ -14,7 +14,7 @@ const Search = () => {
   const [search, { data }] = useLazyAutoCompleteQuery();
   const [findByGeoLocation] = useLazyGetCityByGeoLocationQuery();
   const [getByKeyId] = useLazyGetCityByLocationKeyQuery();
-  console.log(data)
+  console.log(data);
 
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -72,23 +72,29 @@ const Search = () => {
     // ( localArea ? [{ value: localArea.key, label: localArea.title }] : [])
   }, [cityTitle, defaultCity, localArea]);
 
-  const loadOptions = (
-    inputValue: string,
-    callback: (options: { value: string; label: string }[]) => void
-  ) => {
-    const key = process.env.REACT_APP_WEATHER_KEY;
-    if (!key || process.env.STORYBOOK_MODE) return callback([]);
-    search({
-      q: inputValue,
-      apikey: key,
-    })
-      .unwrap()
-      .then((result) =>
-        callback(
-          result.map((city) => ({ value: city.Key, label: city.LocalizedName }))
-        )
-      );
-  };
+  const loadOptions = useCallback(
+    (
+      inputValue: string,
+      callback: (options: { value: string; label: string }[]) => void
+    ) => {
+      const key = process.env.REACT_APP_WEATHER_KEY;
+      if (!key || process.env.STORYBOOK_MODE) return callback([]);
+      search({
+        q: inputValue,
+        apikey: key,
+      })
+        .unwrap()
+        .then((result) =>
+          callback(
+            result.map((city) => ({
+              value: city.Key,
+              label: city.LocalizedName,
+            }))
+          )
+        );
+    },
+    [search]
+  );
 
   const handleInputChange = (newValue: string) => {
     const inputValue = newValue.replace(/\W/g, "");
