@@ -14,7 +14,6 @@ const Search = () => {
   const [search, { data }] = useLazyAutoCompleteQuery();
   const [findByGeoLocation] = useLazyGetCityByGeoLocationQuery();
   const [getByKeyId] = useLazyGetCityByLocationKeyQuery();
-  console.log(data);
 
   const [searchParams, setSearchParams] = useSearchParams();
 
