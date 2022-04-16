@@ -7,12 +7,7 @@ const proxyServer = process.env.REACT_APP_PROXY_SERVER ?? ""
 export const weatherApi = createApi({
     reducerPath: 'weatherApi',
     baseQuery: fetchBaseQuery({
-        mode: 'no-cors',
         baseUrl: proxyServer + 'http://dataservice.accuweather.com/',
-        prepareHeaders: (headers) => {
-            headers.set('Access-Control-Allow-Origin', `*`)
-            return headers
-        },
     }),
     endpoints: (builder) => ({
         autoComplete: builder.query<Weather.AutoComplete.Response, {
