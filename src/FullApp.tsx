@@ -1,5 +1,5 @@
-import { Route, Routes, useLocation } from "react-router-dom";
-import { animated, useTransition } from "react-spring";
+import { Route, Routes } from "react-router-dom";
+// import { animated, useTransition } from "react-spring";
 import App from "./App";
 import Favorites from "./features/favorites/Favorites";
 import { HomePage } from "./features/homePage/HomePage";

@@ -2,11 +2,13 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { Weather } from './autoCompleteResponse'
 
 
+const proxyServer = process.env.REACT_APP_PROXY_SERVER ?? ""
+
 export const weatherApi = createApi({
     reducerPath: 'weatherApi',
     baseQuery: fetchBaseQuery({
         mode: 'no-cors',
-        baseUrl: 'http://dataservice.accuweather.com/',
+        baseUrl: proxyServer + 'http://dataservice.accuweather.com/',
         prepareHeaders: (headers) => {
             headers.set('Access-Control-Allow-Origin', `*`)
             return headers
