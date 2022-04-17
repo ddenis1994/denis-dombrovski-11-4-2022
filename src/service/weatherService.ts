@@ -16,8 +16,7 @@ export const weatherApi = createApi({
             q: string,
             language?: string,
         }>({
-            //@ts-ignore
-            query: (props) => `locations/v1/cities/autocomplete?${Object.keys(props).map(key => props[key] ? `${key}=${props[key]}` : "").join('&')}`,
+            query: (props) => `locations/v1/cities/autocomplete?${(Object.keys(props) as Array<keyof typeof props>).map(key => !!props[key] && `${key}=${props[key]}`).join('&')}`,
 
         }),
         getCurrentWeather: builder.query<Weather.CurrentWeather.Return, {

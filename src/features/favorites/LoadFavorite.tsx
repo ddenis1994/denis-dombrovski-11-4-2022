@@ -1,9 +1,6 @@
 import React from "react";
 import { useAppDispatch } from "../../app/hooks";
-import {
-  useGetCurrentWeatherQuery,
-  useGetTodayWhetherQuery,
-} from "../../service/weatherService";
+import { useGetTodayWhetherQuery } from "../../service/weatherService";
 import LocationCard from "../locationCard/LocationCard";
 import { addOrRemoveFavorite } from "./favoritesSlice";
 type LoadFavoriteProps = {
@@ -32,7 +29,7 @@ const LoadFavorite: React.FC<LoadFavoriteProps> = (props) => {
       title={title}
       Temperature={{
         Minimum: data?.DailyForecasts?.[0].Temperature?.Maximum?.Value ?? 21,
-        Maximum: data?.DailyForecasts?.[0].Temperature.Minimum?.Value ?? 30,
+        Maximum: data?.DailyForecasts?.[0].Temperature?.Minimum?.Value ?? 30,
         Unit: data?.DailyForecasts?.[0].Temperature?.Maximum?.Unit ?? "C",
       }}
     />
