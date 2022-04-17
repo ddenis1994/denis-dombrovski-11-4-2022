@@ -8,6 +8,7 @@ export const weatherApi = createApi({
     reducerPath: 'weatherApi',
     baseQuery: fetchBaseQuery({
         baseUrl: proxyServer + 'http://dataservice.accuweather.com/',
+
     }),
     endpoints: (builder) => ({
         autoComplete: builder.query<Weather.AutoComplete.Response, {
@@ -36,9 +37,15 @@ export const weatherApi = createApi({
         }),
         getCityByLocationKey: builder.query({
             query: ({ apikey, locationKey }) => `locations/v1/${locationKey}?apikey=${apikey}`,
-        })
+        }),
+        getTodayWhether: builder.query<Weather.OneDay.Response, {
+            cityKey: string,
+            apikey: string,
+        }>({
+            query: (props) => `forecasts/v1/daily/1day/${props.cityKey}?apikey=${props.apikey}`,
+        }),
     }),
 })
 
 
-export const { useGetCurrentWeatherQuery, useGet5DaysQuery, useLazyAutoCompleteQuery, useLazyGetCityByGeoLocationQuery, useLazyGetCityByLocationKeyQuery } = weatherApi
+export const { useGetTodayWhetherQuery, useGetCurrentWeatherQuery, useGet5DaysQuery, useLazyAutoCompleteQuery, useLazyGetCityByGeoLocationQuery, useLazyGetCityByLocationKeyQuery } = weatherApi

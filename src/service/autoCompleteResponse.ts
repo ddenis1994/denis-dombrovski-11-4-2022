@@ -1,4 +1,26 @@
 export namespace Weather {
+    export namespace OneDay {
+        export type Request = {
+            cityKey: string;
+        }
+        export type Response = {
+            "Headline": {
+                "EffectiveDate": string,
+                "EffectiveEpochDate": number
+                "Severity": number,
+                "Text": string
+                "Category": string
+                "EndDate": string
+                "EndEpochDate": number
+                "MobileLink": string
+                "Link": string
+            },
+            "DailyForecasts": FiveDays.DailyForecast[]
+        }
+    }
+}
+
+export namespace Weather {
     export namespace AutoComplete {
         type Value = {
             "Version": number,
@@ -39,7 +61,7 @@ export namespace Weather {
     }
 
     export namespace FiveDays {
-        type DailyForecast = {
+        export type DailyForecast = {
             "Date": string,
             "EpochDate": number,
             "Temperature": {
